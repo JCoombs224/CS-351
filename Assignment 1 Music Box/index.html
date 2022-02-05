@@ -17,20 +17,32 @@
     <div class="main-container">
         <h2>Music Box</h2>
         <div class="main-wrapper">
-            <div class="header-wrapper">
-                <p>Enter music notes</p>
-                <p>Output</p>
+            <div class="input-wrapper">
+                <div class="header-wrapper">
+                    <p><b>Enter music notes</b></p> 
+                    <br>
+                    <div id="notesKey">EADGFC</div>
+                </div>
+                <div class="text-wrapper">
+                    <textarea id="textBox"></textarea>
+                </div>
+                <div id="buttons">
+                    <button id="clear-button" onclick="clear_music()">⟲ Clear Music</button>
+                    <button id="play-button" onclick="play_notes()">▶ Play Music</button>
+                </div>
             </div>
-            <div class="text-wrapper">
-                <textarea></textarea>
-                <textarea readonly id="outputText"></textarea>
-            </div>
-            <div id="buttons">
-                <button id="clear-button">⟲ Clear Music</button>
-                <button id="play-button">▶ Play Music</button>
+            <div class="output-wrapper">
+                <div class="header-wrapper">
+                    <p><b>Output</b></p>
+                    <p><b>Code</b></p>
+                    <br>
+                    <br>
+                </div>
+                <div class="text-wrapper">
+                    <textarea disabled id="compiled_code" rows="20" cols="40"></textarea>
+                </div>
             </div>
         </div>
-        
     </div>
 </body>
 <!----------------SCRIPTS--------------->

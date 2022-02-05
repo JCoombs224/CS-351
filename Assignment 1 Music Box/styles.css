@@ -23,13 +23,13 @@ body {
     flex-direction: column;
 }
 
-.main-wrapepr{
+.main-wrapper{
     width: 500px;
-    justify-content: center;
-}
-.header-wrapper{
+    justify-content: space-between;
     display: flex;
-    justify-content: space-evenly;
+}
+.input-wrapper{
+    width: 6em;
 }
 .header-wrapper p{
     margin: 2px;
@@ -37,11 +37,17 @@ body {
     text-align: center;
 }
 .text-wrapper{
-    flex-direction: row;
     height: 500px;
     margin-bottom: 8px;
 }
-
+#textBox{
+    width: 5em;
+    font-size: 1.4em;
+}
+#notesKey{
+    text-align: left;
+    padding-left: 4px;
+}
 .text-wrapper textarea{
     height: 100%;
 }
@@ -49,8 +55,7 @@ body {
 #buttons {
     position: relative;
     display: flex;
-    padding: 8px;
-    justify-content: space-between;
+    justify-content: center;
     height: auto;
 }
 #buttons button{
