@@ -30,6 +30,16 @@ body {
 }
 .input-wrapper{
     width: 6em;
+    position: relative;
+}
+.text-bg{
+    position: absolute;
+    top: 4.5em;
+    height: 1.3em;
+    width: 6em;
+    background-color: rgba(0, 128, 0, 0.4);
+    transition: 0.5s linear;
+    display: none;
 }
 .header-wrapper p{
     margin: 2px;
@@ -38,11 +48,15 @@ body {
 }
 .text-wrapper{
     height: 500px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 #textBox{
     width: 5em;
     font-size: 1.4em;
+    resize: none;
+}
+#compiledCode{
+    resize: vertical;
 }
 #notesKey{
     text-align: left;
@@ -60,15 +74,15 @@ body {
 }
 #buttons button{
     position: relative;
-    padding: 12px;
+    padding: 12px 7px;
     float: right;
     color: white;
     border: none;
     transition: 0.2s;
-    border-radius: 10%;
+    border-radius: 0;
 }
 #buttons button:hover{
-    border-radius: 25%;
+    transform: scale(1.1);
 }
 #play-button {
     background-color: rgb(0, 155, 0);
@@ -81,5 +95,6 @@ body {
 }
 #clear-button:hover {
     background-color: rgb(223, 0, 0);
+    z-index: 99;
 }
 

@@ -1,24 +1,39 @@
+var file = new File([""], "out.html", {type: "text/plain"});
+var fr = new FileReader();
+var html_template = "<!doctype html>"
+html_template = html_template + "<html><head><\/head><body><button onclick='play()'>Play<\/button>"
+html_template = html_template + "<script>@@@PLAY_CODE <\/script>"
+html_template = html_template + "<\/body ><\/html>"
 
-var html_template = "<html><body><script>"
+var code_output = ""
+
+var compiled_code = document.getElementById("compiledCode");
 
 function play_notes(){
     song = document.getElementById("textBox").value;
+    bg = document.getElementById("textBg");
+    bg.style.top = "4.5em";
+    bg.style.display = "block";
     console.log(song);
     lines = song.split(/\r?\n/);
     console.log(lines);
     sound_delay = 0;
-    compiled_script = "";
+    code_output = code_output + "function play(){";
     
     for(i = 0; i < lines.length; ++i)
     {
         console.log(lines[i]);
         sound_delay = (1000 * i);
+        var bg_pos = bg.offsetTop;
         if(lines[i][0] == 'E')
         {
-            console.log("Play E")
+            console.log("Play E");
             setTimeout(function() {
                 new Audio('sounds/E.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/E.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
         if(lines[i][1] == 'A')
         {
@@ -26,6 +41,9 @@ function play_notes(){
             setTimeout(function() {
                 new Audio('sounds/A.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/A.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
         if(lines[i][2] == 'D')
         {
@@ -33,6 +51,9 @@ function play_notes(){
             setTimeout(function() {
                 new Audio('sounds/D.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/D.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
         if(lines[i][3] == 'G')
         {
@@ -40,6 +61,9 @@ function play_notes(){
             setTimeout(function() {
                 new Audio('sounds/G.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/G.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
         if(lines[i][4] == 'F')
         {
@@ -47,6 +71,9 @@ function play_notes(){
             setTimeout(function() {
                 new Audio('sounds/F.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/F.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
         if(lines[i][5] == 'C')
         {
@@ -54,10 +81,23 @@ function play_notes(){
             setTimeout(function() {
                 new Audio('sounds/C.wav').play();
             }, sound_delay);
+            code_output = code_output + "setTimeout(function() {"
+            code_output = code_output + "new Audio('sounds/C.wav').play()"
+            code_output = code_output +"}, " + sound_delay + ");";
         }
     }
-
-    document.getElementById("compiled")
+    bg.style.transition = i + "s linear";
+    bg.style.top = 4.5 + (i*1.4) + "em";
+    
+    setTimeout(function() {
+        bg.style.top = "4.5em";
+        bg.style.transition = "0.5s linear";
+        bg.style.display = "none";
+    }, sound_delay);
+    
+    code_output = code_output + "}";
+    compiled_code.value = html_template.replace("@@@PLAY_CODE", code_output);
+    fr.writeFile('out.html', compiled_code.value, (error) => {console.log('error writing file')});
 }
 
 function clear_music(){
