@@ -18,7 +18,7 @@ function play_notes(){
     lines = song.split(/\r?\n/);
     console.log(lines);
     sound_delay = 0;
-    code_output = code_output + "function play(){";
+    code_output = "function play(){";
     
     for(i = 0; i < lines.length; ++i)
     {
