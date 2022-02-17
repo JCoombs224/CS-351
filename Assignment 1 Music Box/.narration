@@ -1,6 +1,7 @@
-decalre html_template variable
+decalre html template variable
 add header and body to html_template
-add script to html_template
+add play button to html template
+add script to html template
 add ending tags to html_template
 
 declare variable to store the complied code
@@ -97,6 +98,8 @@ declare a timeout function to return the play bar to the top of the textbox
     remove the 'play' class from the play symbol to make it turn back into a stop symbol
 set the timeout function to the sound delay variable
 
+add timeout function code to output code to turn the play symbol back into a stop symbol
+add timeout time to output code
 add the ending curly brace to the code output
 set the compiled code textbox text to the html template variable and add the code output to the template
 

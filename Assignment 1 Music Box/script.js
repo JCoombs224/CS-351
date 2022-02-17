@@ -1,6 +1,7 @@
 var html_template = "<!doctype html>"
-html_template = html_template + "<html><head><\/head><body><button onclick='play()'>Play<\/button>"
-html_template = html_template + "<script>@@@PLAY_CODE <\/script>"
+html_template = html_template + "<html><head><link rel='stylesheet' href='styles.css'/><\/head><body><div class='play-arrow' id='playArrow'>"
+html_template = html_template + "</div><button onclick='play()'>Play<\/button>"
+html_template = html_template + "<script> @@@PLAY_CODE <\/script>"
 html_template = html_template + "<\/body><\/html>"
 
 var code_output = ""
@@ -18,14 +19,14 @@ function play_notes(){
     lines = song.split(/\r?\n/);
     console.log(lines);
     sound_delay = 0;
-    code_output = "function play(){";
+    code_output = "function play(){document.getElementById('playArrow').classList.add('play');";
     
     for(i = 0; i < lines.length; ++i)
     {
         console.log(lines[i]);
         sound_delay = (1000 * i);
         var bg_pos = bg.offsetTop;
-        
+
         if(lines[i][0] == 'E')
         {
             console.log("Play E");
@@ -97,6 +98,8 @@ function play_notes(){
         playArrow.classList.remove('play');
     }, sound_delay);
     
+    code_output = code_output + "setTimeout(function() {document.getElementById('playArrow').classList.remove('play')}, ";
+    code_output = code_output + sound_delay + ");";
     code_output = code_output + "}";
     compiled_code.value = html_template.replace("@@@PLAY_CODE", code_output);
 }
