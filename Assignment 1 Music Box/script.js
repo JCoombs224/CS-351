@@ -1,9 +1,7 @@
-var file = new File([""], "out.html", {type: "text/plain"});
-var fr = new FileReader();
 var html_template = "<!doctype html>"
 html_template = html_template + "<html><head><\/head><body><button onclick='play()'>Play<\/button>"
 html_template = html_template + "<script>@@@PLAY_CODE <\/script>"
-html_template = html_template + "<\/body ><\/html>"
+html_template = html_template + "<\/body><\/html>"
 
 var code_output = ""
 
@@ -12,6 +10,8 @@ var compiled_code = document.getElementById("compiledCode");
 function play_notes(){
     song = document.getElementById("textBox").value;
     bg = document.getElementById("textBg");
+    playArrow = document.getElementById("playArrow");
+    playArrow.classList.add('play');
     bg.style.top = "4.5em";
     bg.style.display = "block";
     console.log(song);
@@ -25,6 +25,7 @@ function play_notes(){
         console.log(lines[i]);
         sound_delay = (1000 * i);
         var bg_pos = bg.offsetTop;
+        
         if(lines[i][0] == 'E')
         {
             console.log("Play E");
@@ -93,11 +94,11 @@ function play_notes(){
         bg.style.top = "4.5em";
         bg.style.transition = "0.5s linear";
         bg.style.display = "none";
+        playArrow.classList.remove('play');
     }, sound_delay);
     
     code_output = code_output + "}";
     compiled_code.value = html_template.replace("@@@PLAY_CODE", code_output);
-    fr.writeFile('out.html', compiled_code.value, (error) => {console.log('error writing file')});
 }
 
 function clear_music(){

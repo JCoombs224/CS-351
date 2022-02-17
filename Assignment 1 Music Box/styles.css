@@ -9,7 +9,8 @@ body {
     margin: 0px;
     font-family: "Questrial", sans-serif;
     background-size: auto;
-    background-color: rgb(252, 252, 252);
+    background-color: rgb(13, 17, 23);
+    color: rgb(189, 199, 209);
     /*animation-iteration-count: 1;
     animation-fill-mode: forwards;*/
 }
@@ -24,7 +25,7 @@ body {
 }
 
 .main-wrapper{
-    width: 500px;
+    width: 550px;
     justify-content: space-between;
     display: flex;
 }
@@ -37,9 +38,31 @@ body {
     top: 4.5em;
     height: 1.3em;
     width: 6em;
-    background-color: rgba(0, 128, 0, 0.4);
+    background-color: rgba(0, 211, 0, 0.4);
     transition: 0.5s linear;
     display: none;
+}
+.play-arrow {
+    position: inline;
+    float: left;
+    width: 60px; 
+    height: 60px; 
+    background-color: rgb(196, 82, 16);
+    border-top: 0px solid transparent;
+    border-bottom: 0px solid transparent;
+    border-left: 0px solid transparent;
+    transition: 0.25s ease-out;
+    transform: rotate(-90deg);
+}
+.play
+{
+    width: 0px; 
+    height: 0px; 
+    background-color: transparent;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    border-left: 60px solid green;
+    transform: rotate(0);
 }
 .header-wrapper p{
     margin: 2px;
@@ -54,9 +77,13 @@ body {
     width: 5em;
     font-size: 1.4em;
     resize: none;
+    background-color: rgb(46, 60, 82);
+    color: rgb(218, 227, 236);
 }
 #compiledCode{
     resize: vertical;
+    background-color: rgb(20, 26, 36);
+    color: rgb(152, 159, 165);
 }
 #notesKey{
     text-align: left;
@@ -65,7 +92,13 @@ body {
 .text-wrapper textarea{
     height: 100%;
 }
+.watermark{
+    position: absolute;
+    right: 128px;
+    bottom: 64px;
+    font-size: 1.2em;
 
+}
 #buttons {
     position: relative;
     display: flex;
