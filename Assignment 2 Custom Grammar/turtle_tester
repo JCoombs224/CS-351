@@ -2,4 +2,6 @@ turtle 100 200
 
 turtle 300 400
 
+turtle -300 -400
+
 print 3 4

@@ -1,4 +1,4 @@
-# Generated from c:\Users\Jamison\Google Drive\Spring 2022 Semester\CS 351\Class Code\Assignment 2\turtle.g4 by ANTLR 4.8
+# Generated from c:\Users\Jamison\Google Drive\Spring 2022 Semester\CS 351\Asssignments\Assignment 2 Custom Grammar\turtle.g4 by ANTLR 4.8
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO

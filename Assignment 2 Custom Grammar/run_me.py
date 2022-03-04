@@ -6,9 +6,13 @@ from turtleLexer import turtleLexer
 from turtleParser import turtleParser
 from turtleVisitor import turtleVisitor
 
+import os
+here = os.path.dirname(os.path.abspath(__file__))
+filename = os.path.join(here, 'turtle_tester')
+
 def main():
     print("helloo world")
-    lexer = turtleLexer( FileStream('turtle_test'))
+    lexer = turtleLexer( FileStream(filename))
     token_stream = CommonTokenStream(lexer)
     parser = turtleParser(token_stream)
     visitor = turtleVisitor()
