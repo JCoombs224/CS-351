@@ -1,5 +1,7 @@
 # Generated from c:\Users\Jamison\Google Drive\Spring 2022 Semester\CS 351\Asssignments\Assignment 2 Custom Grammar\GCodes.g4 by ANTLR 4.8
+from cmath import pi
 from antlr4 import *
+from numpy import arctan, arctan2
 if __name__ is not None and "." in __name__:
     from .GCodesParser import GCodesParser
 else:
@@ -22,15 +24,13 @@ class GCodesVisitor(ParseTreeVisitor):
         target_x = int(ctx.x_cord.text)
         target_y = int(ctx.y_cord.text)
         cur_pos = skk.pos() 
-        #if target_x > cur_pos[0]:
-            #skk.right(target_x - cur_pos[0])
-        #else:
-        #    skk.left(cur_pos[0] - target_x)
+        skk.speed(7)
 
-        #if target_y > cur_pos[0]:
-        #    skk.forward(target_y - cur_pos[0])
-        #else:
-        #    skk.backward(cur_pos[0] - target_y)
+        # Uncomment this if you want cursor to rotate
+        #if(target_x - cur_pos[0] != 0):
+        #    angle = arctan2((target_y - cur_pos[1]),(target_x - cur_pos[0])) 
+        #    skk.left(angle * 180 / pi)
+
         skk.setpos(target_x, target_y)
         return self.visitChildren(ctx)
 
