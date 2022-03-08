@@ -37,6 +37,7 @@ class turtleVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by turtleParser#printlineExpr.
     def visitPrintlineExpr(self, ctx:turtleParser.PrintlineExprContext):
+        print(f"Draw line to x={ctx.x_cord.text} y={ctx.y_cord.text}")
         return self.visitChildren(ctx)
 
 

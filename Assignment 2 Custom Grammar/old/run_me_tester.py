@@ -2,19 +2,20 @@ import turtle
 import time
 from antlr4 import *
 
-from GCodesLexer import GCodesLexer
-from GCodesParser import GCodesParser
-from GCodesVisitor import GCodesVisitor
+from turtleLexer import turtleLexer
+from turtleParser import turtleParser
+from turtleVisitor import turtleVisitor
 
 import os
 here = os.path.dirname(os.path.abspath(__file__))
-filename = os.path.join(here, 'gcode_script')
+filename = os.path.join(here, 'turtle_tester')
 
 def main():
-    lexer = GCodesLexer( FileStream(filename))
+    print("helloo world")
+    lexer = turtleLexer( FileStream(filename))
     token_stream = CommonTokenStream(lexer)
-    parser = GCodesParser(token_stream)
-    visitor = GCodesVisitor()
+    parser = turtleParser(token_stream)
+    visitor = turtleVisitor()
 
     while True: 
         tree = parser.start()
@@ -23,7 +24,7 @@ def main():
         print(tree.toStringTree(recog=parser))
         visitor.visit(tree)
 
-    time.sleep(4)
+    time.sleep(2)
 
 
 if __name__ == '__main__':
