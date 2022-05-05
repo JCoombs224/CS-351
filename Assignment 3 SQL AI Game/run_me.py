@@ -107,7 +107,7 @@ def demo(screen):
                 if skip_insert == False:
                     cur.execute(f"update main_game_field set X = {row[2]} , Y = {row[3]} where owner_id = (select owner_id from owner where name='{p['module_name']}') and X = {row[0]} and Y = {row[1]} and is_flag = FALSE")
             cur.execute("delete from engine_orders")
-        time.sleep(.1)
+        time.sleep(0)
         con.commit()
 
 Screen.wrapper(demo)

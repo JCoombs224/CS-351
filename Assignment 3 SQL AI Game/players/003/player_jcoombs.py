@@ -1,11 +1,9 @@
-from genericpath import exists
 import random
 import math
 
 # Globals
 my_dots = {}
 food_assigned = {}
-prevDot = ()
 countFlocked = 0
 numDots = 1
 attacking = 0
@@ -27,6 +25,9 @@ def run(db_cursor , state):
 
     if numDots >= foodSeekLimit:
         attacking = 1
+        food_assigned = {}
+        if foodSeekLimit < 60:
+            foodSeekLimit += 1
     else:
         attacking = 0
 
@@ -38,18 +39,20 @@ def run(db_cursor , state):
 
 def flockState(db_cursor, state, rows):
     prevDot = ()
+    flockPattern = [(-2,2), (-1,2), (0,2), (-2,1), (-1,1), (0,1), (-2,0), (-1,0), (-2,-1), (-1,-1), (0,-1), (-2,-2), (-1,-2), (0,-2)]
     global numDots
     global countFlocked
     global flocked
     global my_dots
     global foodSeekLimit
+    currDots = {}
     rows = rows.fetchall()
     myFlag = db_cursor.execute(f"select x,y from main_game_field as gf, owner where is_flag = TRUE and gf.owner_id = owner.owner_id and owner.name = '{state['NAME']}'").fetchone()
-    enemies = db_cursor.execute(f"select x,y from main_game_field as gf, owner where is_flag = FALSE and gf.owner_id = owner.owner_id and owner.name != '{state['NAME']}' and owner.name != 'Food'")
+    enemies = db_cursor.execute(f"select x,y from main_game_field as gf, owner where is_flag = FALSE and gf.owner_id = owner.owner_id and owner.name != '{state['NAME']}'and owner.name != 'Food'")
     enemy = enemies.fetchone()
     count = 0
 
-    if countFlocked > numDots/3 and not flocked:
+    if countFlocked > numDots/2 and not flocked:
         flocked = 1
         my_dots = {}
     else:
@@ -57,8 +60,6 @@ def flockState(db_cursor, state, rows):
 
     for row in rows:
         count+=1
-        flockForm = random.choice([1, 2, 3, 4, 5, 6])
-        fDist = random.choice([1, 2, 3, 4])
         if prevDot == ():
             if not flocked:
                 currentSeek = (myFlag[0], myFlag[1]-2)
@@ -68,32 +69,30 @@ def flockState(db_cursor, state, rows):
                 else: 
                     currentSeek = (myFlag[0], myFlag[1]-2)
         elif (row[0], row[1]) not in my_dots or flocked:
-            if flockForm == 1:
-                currentSeek = (prevDot[0],prevDot[1]-fDist)
-            elif flockForm == 2:
-                currentSeek = (prevDot[0],prevDot[1]+fDist)
-            elif flockForm == 3:
-                currentSeek = (prevDot[0]-fDist,prevDot[1])
-            elif flockForm == 4:
-                currentSeek = (prevDot[0]+fDist,prevDot[1])
-            elif flockForm == 5:
-                currentSeek = (prevDot[0]-fDist,prevDot[1]-fDist)
-            elif flockForm == 6:
-                currentSeek = (prevDot[0]+fDist,prevDot[1]+fDist)
-            my_dots[(row[0],row[1])] = currentSeek
+            formMultiple = (count // 14) + 1
+            formMod = count % 14
+            currentSeek = (prevDot[0] + (flockPattern[formMod][0]*formMultiple),prevDot[1]+flockPattern[formMod][1])
         else:
             currentSeek = my_dots[(row[0],row[1])]
+
+        currDots[(row[0],row[1])] = currentSeek
         
         prevDot = (row[0],row[1])
-        offset = getOffset(row[0], row[1], currentSeek[0], currentSeek[1])
+        if currentSeek != ():
+            offset = getOffset(row[0], row[1], currentSeek[0], currentSeek[1])
 
-        if (row[0], row[1]) != currentSeek and (row[0], row[1]) in my_dots:
+        if (row[0], row[1]) != currentSeek and (row[0] + offset[0], row[1] + offset[1]) not in my_dots:
             db_cursor.execute(f"insert into engine_orders values( {row[0]}, {row[1]}, {row[0] + offset[0] }, {row[1] + offset[1] }, 'MOVE')")
-            del my_dots[ (row[0],row[1]) ]
+            del currDots[(row[0], row[1])]
+            currDots[ (row[0] + offset[0], row[1] + offset[1]) ] = currentSeek
+            if (row[0], row[1]) in my_dots:
+                del my_dots[(row[0], row[1])]
             my_dots[ (row[0] + offset[0], row[1] + offset[1]) ] = currentSeek
-        else:
+        elif (row[0], row[1]) == currentSeek:
             countFlocked += 1
+
     numDots = count
+    my_dots = currDots
 
 
 def foodSeekState(db_cursor, rows):
@@ -101,6 +100,7 @@ def foodSeekState(db_cursor, rows):
     global my_dots
     global countFlocked
     global foodSeekLimit
+    currDots = {}
     count = 0
     for row in rows.fetchall():
         count += 1
@@ -111,13 +111,15 @@ def foodSeekState(db_cursor, rows):
         if currentSeek != ():
             offset = getOffset(row[0], row[1], currentSeek[0], currentSeek[1])
         else:
-            foodSeekLimit -= 1
+            foodSeekLimit -= 2
             offset = [random.choice([0,1,-1]), random.choice([0,1,-1])]
             
-
-        db_cursor.execute(f"insert into engine_orders values( {row[0]}, {row[1]}, {row[0] + offset[0] }, {row[1] + offset[1] }, 'MOVE')")
-        del my_dots[ (row[0],row[1]) ]
-        my_dots[ (row[0] + offset[0], row[1] + offset[1]) ] = currentSeek
+        if (row[0] + offset[0], row[1] + offset[1]) not in my_dots:
+            db_cursor.execute(f"insert into engine_orders values( {row[0]}, {row[1]}, {row[0] + offset[0] }, {row[1] + offset[1] }, 'MOVE')")
+            currDots[ (row[0] + offset[0], row[1] + offset[1]) ] = currentSeek
+        else:
+            currDots[ (row[0], row[1]) ] = currentSeek
+    my_dots = currDots
 
     numDots = count
 
@@ -148,10 +150,9 @@ def seekFood(db_cursor, x, y):
 
     for food in foodCursor.fetchall():
         newDistance = abs(math.dist([food[0], food[1]], [x, y]))
-        if newDistance < mDistance and newDistance != 0:
+        if newDistance < mDistance and newDistance != 0 and (food[0], food[1]) not in food_assigned:
             currentFood = (food[0], food[1])
             mDistance = newDistance
     
     food_assigned[currentFood] = 1
-    #print(f"dot at {x} {y} assigned food at {currentFood}")
     return currentFood
