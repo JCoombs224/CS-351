@@ -14,8 +14,9 @@ import importlib
 import sys
 import os
 
-#os.chdir(r'C:/Users/Jamison/Google Drive/Spring 2022 Semester/CS 351/Asssignments/Assignment 3 SQL AI Game')
-os.chdir(r'C:/Users/Jamie/My Drive/Spring 2022 Semester/CS 351/Asssignments/Assignment 3 SQL AI Game')
+here = os.path.dirname(os.path.abspath(__file__))
+os.chdir(here)
+
 
 configs = None
 with open('battleDots.yml', 'r') as file:

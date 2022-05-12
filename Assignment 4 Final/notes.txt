@@ -1,0 +1,4 @@
+flocking notes:
+
+each dot after next dot linked to previous dot by modulo 2 for x/y +/- 1
+first dot is leader
