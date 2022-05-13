@@ -17,15 +17,6 @@ class battleDotsListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by battleDotsParser#playerExpression.
-    def enterPlayerExpression(self, ctx:battleDotsParser.PlayerExpressionContext):
-        pass
-
-    # Exit a parse tree produced by battleDotsParser#playerExpression.
-    def exitPlayerExpression(self, ctx:battleDotsParser.PlayerExpressionContext):
-        pass
-
-
     # Enter a parse tree produced by battleDotsParser#vsExpression.
     def enterVsExpression(self, ctx:battleDotsParser.VsExpressionContext):
         pass

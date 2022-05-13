@@ -12,12 +12,13 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\b")
-        buf.write("\22\4\2\t\2\4\3\t\3\3\2\3\2\5\2\t\n\2\3\3\3\3\3\3\3\3")
-        buf.write("\3\3\5\3\20\n\3\3\3\2\2\4\2\4\2\2\2\22\2\b\3\2\2\2\4\17")
-        buf.write("\3\2\2\2\6\t\5\4\3\2\7\t\3\2\2\2\b\6\3\2\2\2\b\7\3\2\2")
-        buf.write("\2\t\3\3\2\2\2\n\13\7\3\2\2\13\20\7\7\2\2\f\20\7\4\2\2")
-        buf.write("\r\16\7\5\2\2\16\20\7\6\2\2\17\n\3\2\2\2\17\f\3\2\2\2")
-        buf.write("\17\r\3\2\2\2\20\5\3\2\2\2\4\b\17")
+        buf.write("\25\4\2\t\2\4\3\t\3\3\2\3\2\5\2\t\n\2\3\3\5\3\f\n\3\3")
+        buf.write("\3\3\3\3\3\3\3\3\3\5\3\23\n\3\3\3\2\2\4\2\4\2\2\2\25\2")
+        buf.write("\b\3\2\2\2\4\22\3\2\2\2\6\t\5\4\3\2\7\t\3\2\2\2\b\6\3")
+        buf.write("\2\2\2\b\7\3\2\2\2\t\3\3\2\2\2\n\f\7\7\2\2\13\n\3\2\2")
+        buf.write("\2\13\f\3\2\2\2\f\r\3\2\2\2\r\16\7\3\2\2\16\23\7\7\2\2")
+        buf.write("\17\20\7\4\2\2\20\21\7\6\2\2\21\23\7\5\2\2\22\13\3\2\2")
+        buf.write("\2\22\17\3\2\2\2\23\5\3\2\2\2\5\b\13\22")
         return buf.getvalue()
 
 
@@ -31,7 +32,7 @@ class battleDotsParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'PLAYER'", "'vs'", "'duration'" ]
+    literalNames = [ "<INVALID>", "'vs'", "'duration'", "'->'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "INT", "NAME", "WS" ]
@@ -96,7 +97,7 @@ class battleDotsParser ( Parser ):
             self.state = 6
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [battleDotsParser.T__0, battleDotsParser.T__1, battleDotsParser.T__2]:
+            if token in [battleDotsParser.T__0, battleDotsParser.T__1, battleDotsParser.NAME]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 4
                 self.expr()
@@ -137,7 +138,7 @@ class battleDotsParser ( Parser ):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a battleDotsParser.ExprContext
             super().__init__(parser)
-            self.seconds = None # Token
+            self.time = None # Token
             self.copyFrom(ctx)
 
         def INT(self):
@@ -158,37 +159,19 @@ class battleDotsParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class PlayerExpressionContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a battleDotsParser.ExprContext
-            super().__init__(parser)
-            self.player_name = None # Token
-            self.copyFrom(ctx)
-
-        def NAME(self):
-            return self.getToken(battleDotsParser.NAME, 0)
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterPlayerExpression" ):
-                listener.enterPlayerExpression(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitPlayerExpression" ):
-                listener.exitPlayerExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitPlayerExpression" ):
-                return visitor.visitPlayerExpression(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class VsExpressionContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a battleDotsParser.ExprContext
             super().__init__(parser)
+            self.name1 = None # Token
+            self.name2 = None # Token
             self.copyFrom(ctx)
 
+        def NAME(self, i:int=None):
+            if i is None:
+                return self.getTokens(battleDotsParser.NAME)
+            else:
+                return self.getToken(battleDotsParser.NAME, i)
 
         def enterRule(self, listener:ParseTreeListener):
             if hasattr( listener, "enterVsExpression" ):
@@ -210,31 +193,36 @@ class battleDotsParser ( Parser ):
 
         localctx = battleDotsParser.ExprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_expr)
+        self._la = 0 # Token type
         try:
-            self.state = 13
+            self.state = 16
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [battleDotsParser.T__0]:
-                localctx = battleDotsParser.PlayerExpressionContext(self, localctx)
+            if token in [battleDotsParser.T__0, battleDotsParser.NAME]:
+                localctx = battleDotsParser.VsExpressionContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 8
-                self.match(battleDotsParser.T__0)
                 self.state = 9
-                localctx.player_name = self.match(battleDotsParser.NAME)
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if _la==battleDotsParser.NAME:
+                    self.state = 8
+                    localctx.name1 = self.match(battleDotsParser.NAME)
+
+
+                self.state = 11
+                self.match(battleDotsParser.T__0)
+                self.state = 12
+                localctx.name2 = self.match(battleDotsParser.NAME)
                 pass
             elif token in [battleDotsParser.T__1]:
-                localctx = battleDotsParser.VsExpressionContext(self, localctx)
-                self.enterOuterAlt(localctx, 2)
-                self.state = 10
-                self.match(battleDotsParser.T__1)
-                pass
-            elif token in [battleDotsParser.T__2]:
                 localctx = battleDotsParser.DurationExpressionContext(self, localctx)
-                self.enterOuterAlt(localctx, 3)
-                self.state = 11
+                self.enterOuterAlt(localctx, 2)
+                self.state = 13
+                self.match(battleDotsParser.T__1)
+                self.state = 14
+                localctx.time = self.match(battleDotsParser.INT)
+                self.state = 15
                 self.match(battleDotsParser.T__2)
-                self.state = 12
-                localctx.seconds = self.match(battleDotsParser.INT)
                 pass
             else:
                 raise NoViableAltException(self)
